@@ -1,0 +1,985 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Solar-Powered LoRaWAN Air Quality Sensing System</title>
+  <style>
+    html {
+      scroll-behavior: smooth;
+      scroll-padding-top: 92px;
+    }
+
+    :root {
+      --bg: #f6f8f3;
+      --surface: #ffffff;
+      --surface-soft: #eef4ec;
+      --text: #172018;
+      --muted: #617063;
+      --line: #d9e2d7;
+      --accent: #54775a;
+      --accent-dark: #263f2b;
+      --accent-soft: #dceadd;
+      --warning: #f0c879;
+      --shadow: 0 18px 45px rgba(23, 32, 24, 0.10);
+      --radius-xl: 28px;
+      --radius-lg: 20px;
+      --radius-md: 14px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top left, #e4f0e4 0, transparent 34%), var(--bg);
+      color: var(--text);
+      line-height: 1.58;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page {
+      width: min(1180px, calc(100% - 40px));
+      margin: 0 auto;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      backdrop-filter: blur(18px);
+      background: rgba(246, 248, 243, 0.82);
+      border-bottom: 1px solid rgba(217, 226, 215, 0.7);
+    }
+
+    .nav {
+      height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 750;
+      letter-spacing: -0.02em;
+    }
+
+    .logo {
+      width: 38px;
+      height: 38px;
+      display: grid;
+      place-items: center;
+      border-radius: 12px;
+      background: var(--accent-dark);
+      color: #fff;
+      box-shadow: 0 10px 20px rgba(38, 63, 43, 0.18);
+    }
+
+    .navlinks {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .navlinks a {
+      padding: 10px 13px;
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 600;
+      border-radius: 999px;
+      transition: background 180ms ease, color 180ms ease, transform 180ms ease;
+    }
+
+    .navlinks a:hover {
+      background: var(--accent-soft);
+      color: var(--accent-dark);
+      transform: translateY(-1px);
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      min-height: 46px;
+      padding: 13px 18px;
+      border-radius: 999px;
+      font-weight: 700;
+      border: 1px solid transparent;
+      transition: transform 190ms ease, box-shadow 190ms ease, background 190ms ease;
+    }
+
+    .button.primary {
+      background: var(--accent-dark);
+      color: white;
+      box-shadow: 0 12px 28px rgba(38, 63, 43, 0.22);
+    }
+
+    .button.secondary {
+      background: rgba(255,255,255,0.72);
+      color: var(--accent-dark);
+      border-color: var(--line);
+    }
+
+    .button:hover {
+      transform: translateY(-2px);
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 420px;
+      align-items: center;
+      gap: 64px;
+      padding: 76px 0 62px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      gap: 8px;
+      align-items: center;
+      padding: 8px 12px;
+      background: var(--accent-soft);
+      border-radius: 999px;
+      color: var(--accent-dark);
+      font-size: 13px;
+      font-weight: 680;
+      margin-bottom: 18px;
+    }
+
+    h1 {
+      margin: 0;
+      max-width: 760px;
+      font-size: clamp(42px, 7vw, 76px);
+      line-height: 1.02;
+      letter-spacing: -0.045em;
+      font-weight: 800;
+      text-wrap: balance;
+    }
+
+    .lead {
+      margin: 24px 0 30px;
+      max-width: 650px;
+      color: var(--muted);
+      font-size: clamp(17px, 2.2vw, 21px);
+      line-height: 1.65;
+      text-wrap: pretty;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .hero-meta {
+      margin-top: 28px;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      max-width: 660px;
+    }
+
+    .mini-stat {
+      padding: 16px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.64);
+      border-radius: var(--radius-md);
+    }
+
+    .mini-stat strong {
+      display: block;
+      font-size: 20px;
+      letter-spacing: -0.03em;
+      margin-bottom: 4px;
+    }
+
+    .mini-stat span {
+      display: block;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.35;
+    }
+
+    .device-card {
+      position: relative;
+      padding: 24px;
+      background: linear-gradient(180deg, #ffffff 0%, #edf4eb 100%);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .device-card::before {
+      content: "";
+      position: absolute;
+      width: 220px;
+      height: 220px;
+      top: -80px;
+      right: -80px;
+      border-radius: 50%;
+      background: rgba(84, 119, 90, 0.12);
+    }
+
+    .sensor-visual {
+      position: relative;
+      min-height: 430px;
+      display: grid;
+      place-items: center;
+    }
+
+    .solar-panel {
+      width: 270px;
+      height: 92px;
+      border-radius: 16px;
+      background: repeating-linear-gradient(90deg, #24364a 0 27px, #1c2b3e 27px 30px);
+      border: 8px solid #d9dfd4;
+      transform: rotate(-6deg);
+      box-shadow: 0 22px 35px rgba(23, 32, 24, 0.18);
+    }
+
+    .node-body {
+      margin-top: -12px;
+      width: 255px;
+      padding: 18px;
+      border-radius: 22px;
+      background: #f9faf7;
+      border: 1px solid var(--line);
+      box-shadow: 0 24px 42px rgba(23, 32, 24, 0.15);
+    }
+
+    .node-screen {
+      background: #e8eee6;
+      border-radius: 15px;
+      padding: 16px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      color: #253a28;
+    }
+
+    .metric-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(84, 119, 90, 0.16);
+      white-space: nowrap;
+    }
+
+    .metric-row:last-child {
+      border-bottom: 0;
+    }
+
+    .antenna {
+      width: 5px;
+      height: 88px;
+      background: var(--accent-dark);
+      border-radius: 99px;
+      margin: 0 auto 8px;
+      transform: rotate(18deg);
+      transform-origin: bottom;
+    }
+
+    section {
+      padding: 76px 0;
+    }
+
+    .section-head {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 30px;
+      margin-bottom: 30px;
+    }
+
+    .section-label {
+      margin: 0 0 10px;
+      color: var(--accent);
+      font-weight: 760;
+      font-size: 14px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    h2 {
+      margin: 0;
+      max-width: 720px;
+      font-size: clamp(32px, 4.6vw, 54px);
+      line-height: 1;
+      letter-spacing: -0.06em;
+      text-wrap: balance;
+    }
+
+    .section-intro {
+      max-width: 520px;
+      margin: 0;
+      color: var(--muted);
+      font-size: 17px;
+      line-height: 1.65;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .card {
+      min-height: 238px;
+      padding: 24px;
+      background: rgba(255,255,255,0.78);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      box-shadow: 0 14px 35px rgba(23, 32, 24, 0.07);
+    }
+
+    .icon {
+      width: 44px;
+      height: 44px;
+      display: grid;
+      place-items: center;
+      border-radius: 14px;
+      background: var(--accent-soft);
+      margin-bottom: 18px;
+      font-size: 22px;
+    }
+
+    .card h3 {
+      margin: 0 0 11px;
+      font-size: 18px;
+      letter-spacing: -0.025em;
+    }
+
+    .card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.6;
+    }
+
+    .workflow {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      align-items: stretch;
+    }
+
+    .workflow-panel {
+      padding: 28px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-xl);
+      background: rgba(255,255,255,0.78);
+      box-shadow: var(--shadow);
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: 46px 1fr;
+      gap: 16px;
+      padding: 18px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .step:last-child {
+      border-bottom: 0;
+    }
+
+    .number {
+      width: 46px;
+      height: 46px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--accent-dark);
+      color: white;
+      font-weight: 800;
+    }
+
+    .step h3 {
+      margin: 0 0 6px;
+    }
+
+    .step p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .signal-card {
+      position: relative;
+      padding: 28px;
+      border-radius: var(--radius-xl);
+      background: linear-gradient(135deg, #263f2b 0%, #486a4e 100%);
+      color: white;
+      overflow: hidden;
+      min-height: 100%;
+    }
+
+    .signal-card::after {
+      content: "";
+      position: absolute;
+      inset: auto -80px -120px auto;
+      width: 260px;
+      height: 260px;
+      border-radius: 50%;
+      border: 34px solid rgba(255,255,255,0.09);
+    }
+
+    .signal-card p {
+      max-width: 450px;
+      color: rgba(255,255,255,0.78);
+      font-size: 17px;
+      line-height: 1.7;
+    }
+
+    .signal-waves {
+      position: relative;
+      height: 180px;
+      margin-top: 20px;
+    }
+
+    .wave {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      border: 2px solid rgba(255,255,255,0.32);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .wave:nth-child(1) { width: 70px; height: 70px; }
+    .wave:nth-child(2) { width: 130px; height: 130px; }
+    .wave:nth-child(3) { width: 190px; height: 190px; }
+
+    .eink-section {
+      background: var(--surface-soft);
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .eink-main {
+      display: grid;
+      grid-template-columns: 0.9fr 1.1fr;
+      gap: 32px;
+      align-items: center;
+    }
+
+    .eink-device {
+      padding: 28px;
+      border-radius: 34px;
+      background: #d7ded3;
+      border: 1px solid #c5d0c0;
+      box-shadow: 0 28px 50px rgba(23, 32, 24, 0.16);
+    }
+
+    .eink-screen {
+      min-height: 380px;
+      padding: 26px;
+      border-radius: 22px;
+      background: #f9fbf6;
+      border: 2px solid #aebba8;
+      color: #1c241c;
+      font-family: Georgia, "Times New Roman", serif;
+    }
+
+    .screen-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      border-bottom: 2px solid #1c241c;
+      padding-bottom: 14px;
+      margin-bottom: 20px;
+    }
+
+    .screen-title {
+      font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      font-size: 21px;
+    }
+
+    .live-pill {
+      padding: 7px 9px;
+      border: 1px solid #1c241c;
+      border-radius: 999px;
+      font-size: 12px;
+      font-family: ui-monospace, monospace;
+      white-space: nowrap;
+    }
+
+    .screen-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 13px;
+      margin-bottom: 22px;
+    }
+
+    .screen-metric {
+      padding: 14px;
+      border: 1px solid #1c241c;
+      border-radius: 10px;
+      min-height: 104px;
+    }
+
+    .screen-metric small {
+      display: block;
+      font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.11em;
+      line-height: 1.35;
+    }
+
+    .screen-metric strong {
+      display: block;
+      margin-top: 13px;
+      font-size: clamp(30px, 4vw, 40px);
+      line-height: 1;
+      letter-spacing: -0.05em;
+    }
+
+    .screen-metric span {
+      display: block;
+      margin-top: 5px;
+      font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+      font-size: 13px;
+      line-height: 1.25;
+      color: #485048;
+    }
+
+    .history-bars {
+      display: grid;
+      gap: 8px;
+    }
+
+    .bar-row {
+      display: grid;
+      grid-template-columns: 64px 1fr 44px;
+      gap: 10px;
+      align-items: center;
+      font-family: ui-monospace, monospace;
+      font-size: 13px;
+      line-height: 1.25;
+    }
+
+    .bar {
+      height: 12px;
+      border: 1px solid #1c241c;
+      border-radius: 999px;
+      background: repeating-linear-gradient(90deg, #1c241c 0 var(--w), transparent var(--w) 100%);
+    }
+
+    .feature-list {
+      display: grid;
+      gap: 16px;
+    }
+
+    .feature-item {
+      padding: 19px;
+      border-radius: var(--radius-lg);
+      background: rgba(255,255,255,0.76);
+      border: 1px solid var(--line);
+    }
+
+    .feature-item h3 {
+      margin: 0 0 7px;
+    }
+
+    .feature-item p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .specs {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .spec {
+      padding: 24px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      background: white;
+    }
+
+    .spec strong {
+      display: block;
+      margin-bottom: 9px;
+      letter-spacing: -0.02em;
+    }
+
+    .spec span {
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    .cta {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 24px;
+      align-items: center;
+      padding: 34px;
+      border-radius: var(--radius-xl);
+      background: var(--accent-dark);
+      color: white;
+    }
+
+    .cta p {
+      margin: 8px 0 0;
+      color: rgba(255,255,255,0.74);
+      line-height: 1.65;
+    }
+
+    footer {
+      padding: 28px 0 48px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    @media (max-width: 920px) {
+      .hero, .workflow, .cta {
+        grid-template-columns: 1fr;
+      }
+
+      .cards {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .section-head {
+        align-items: start;
+        flex-direction: column;
+      }
+    }
+
+    @media (max-width: 620px) {
+      .page {
+        width: min(100% - 24px, 1180px);
+      }
+
+      .navlinks {
+        display: none;
+      }
+
+      .hero {
+        padding-top: 56px;
+      }
+
+      h1 {
+        line-height: 1.04;
+        letter-spacing: -0.035em;
+      }
+
+      .hero-meta, .cards, .specs, .eink-main {
+        grid-template-columns: 1fr;
+      }
+
+      .sensor-body {
+        width: 90%;
+      }
+
+      .button {
+        width: 100%;
+      }
+
+      .live-top {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .step {
+        grid-template-columns: 38px 1fr;
+      }
+
+      .number {
+        width: 38px;
+        height: 38px;
+      }
+
+      .screen-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .screen-top {
+        flex-direction: column;
+      }
+
+      .bar-row {
+        grid-template-columns: 58px 1fr 38px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html {
+        scroll-behavior: auto;
+      }
+
+      .button, .navlinks a {
+        transition: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="page nav">
+      <a class="brand" href="#top" aria-label="Go to top">
+        <span class="logo">AQ</span>
+        <span>Solar LoRaWAN Air Quality</span>
+      </a>
+      <nav class="navlinks" aria-label="Page navigation">
+        <a href="#features">Features</a>
+        <a href="#system">System</a>
+        <a href="#data">Data display</a>
+        <a href="#prototype">Prototype</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="page hero">
+      <div>
+        <div class="eyebrow">Off-grid environmental sensing</div>
+        <h1>Local air quality, measured off-grid.</h1>
+        <p class="lead">
+          A solar-powered LoRaWAN sensing system that measures particulate matter, temperature, humidity and air pressure, then presents live and recent environmental readings on a dedicated e-ink display.
+        </p>
+        <div class="hero-actions">
+          <a class="button primary" href="#system">Explore the system</a>
+          <a class="button secondary" href="#data">See the display</a>
+        </div>
+        <div class="hero-meta" aria-label="Core project highlights">
+          <div class="mini-stat">
+            <strong>PM2.5 / PM10</strong>
+            <span>Particle sensing for local air quality observation</span>
+          </div>
+          <div class="mini-stat">
+            <strong>LoRaWAN</strong>
+            <span>Long-range, low-power data transmission</span>
+          </div>
+          <div class="mini-stat">
+            <strong>Solar</strong>
+            <span>Designed for off-grid outdoor deployment</span>
+          </div>
+        </div>
+      </div>
+
+      <aside class="device-card" aria-label="Prototype visual summary">
+        <div class="sensor-visual">
+          <div>
+            <div class="solar-panel" aria-hidden="true"></div>
+            <div class="antenna" aria-hidden="true"></div>
+            <div class="node-body">
+              <div class="node-screen">
+                <div class="metric-row"><span>PM2.5</span><strong>12 µg/m³</strong></div>
+                <div class="metric-row"><span>PM10</span><strong>21 µg/m³</strong></div>
+                <div class="metric-row"><span>Temp</span><strong>18.6°C</strong></div>
+                <div class="metric-row"><span>RH</span><strong>54%</strong></div>
+                <div class="metric-row"><span>Pressure</span><strong>1012 hPa</strong></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </section>
+
+    <section id="features" class="page">
+      <div class="section-head">
+        <div>
+          <p class="section-label">Core functions</p>
+          <h2>Built for low-maintenance urban sensing.</h2>
+        </div>
+        <p class="section-intro">
+          The project focuses on a practical environmental monitoring node that can collect meaningful local data while reducing dependence on wired power and Wi-Fi infrastructure.
+        </p>
+      </div>
+
+      <div class="cards">
+        <article class="card">
+          <div class="icon">🌫️</div>
+          <h3>Air quality sensing</h3>
+          <p>Measures PM2.5 and PM10 to observe local particulate pollution conditions in outdoor environments.</p>
+        </article>
+        <article class="card">
+          <div class="icon">🌡️</div>
+          <h3>Weather context</h3>
+          <p>Records temperature, humidity and air pressure to give more context to changes in air quality data.</p>
+        </article>
+        <article class="card">
+          <div class="icon">📡</div>
+          <h3>LoRaWAN communication</h3>
+          <p>Sends compact data packets over a long-range, low-power LoRaWAN connection to support outdoor deployment.</p>
+        </article>
+        <article class="card">
+          <div class="icon">☀️</div>
+          <h3>Solar powered</h3>
+          <p>Uses a solar panel, rechargeable battery and duty-cycled operation to support autonomous sensing.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="system" class="page">
+      <div class="section-head">
+        <div>
+          <p class="section-label">System architecture</p>
+          <h2>From outdoor sensing to indoor display.</h2>
+        </div>
+      </div>
+
+      <div class="workflow">
+        <div class="workflow-panel">
+          <div class="step">
+            <div class="number">1</div>
+            <div>
+              <h3>Sense</h3>
+              <p>The outdoor sensor node measures particulate matter and environmental conditions at regular intervals.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="number">2</div>
+            <div>
+              <h3>Transmit</h3>
+              <p>The node sends a compact payload through LoRaWAN, reducing power consumption while maintaining long-range communication.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="number">3</div>
+            <div>
+              <h3>Receive and display</h3>
+              <p>A dedicated display node presents live readings and selected historical values on an e-ink screen.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="signal-card">
+          <p class="section-label" style="color: rgba(255,255,255,0.72);">Why LoRaWAN?</p>
+          <h2 style="font-size: clamp(30px, 4vw, 48px);">Long range, low power, no Wi-Fi.</h2>
+          <p>
+            LoRaWAN is suitable for sensing systems that send small amounts of data over long distances. For this project, it helps the outdoor node operate away from mains power and local Wi-Fi networks.
+          </p>
+          <div class="signal-waves" aria-hidden="true">
+            <span class="wave"></span>
+            <span class="wave"></span>
+            <span class="wave"></span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="data" class="eink-section">
+      <div class="page eink-main">
+        <div class="eink-device" aria-label="E-ink display concept">
+          <div class="eink-screen">
+            <div class="screen-top">
+              <div class="screen-title">Local Air Quality</div>
+              <div class="live-pill">LIVE 10:40</div>
+            </div>
+            <div class="screen-grid">
+              <div class="screen-metric">
+                <small>PM2.5</small>
+                <strong>12</strong>
+                <span>µg/m³</span>
+              </div>
+              <div class="screen-metric">
+                <small>PM10</small>
+                <strong>21</strong>
+                <span>µg/m³</span>
+              </div>
+              <div class="screen-metric">
+                <small>Temp / RH</small>
+                <strong>18.6</strong>
+                <span>°C / 54% RH</span>
+              </div>
+              <div class="screen-metric">
+                <small>Pressure</small>
+                <strong>1012</strong>
+                <span>hPa</span>
+              </div>
+            </div>
+            <div class="history-bars" aria-label="Historical PM2.5 example readings">
+              <div class="bar-row"><span>09:40</span><div class="bar" style="--w: 42%"></div><span>10</span></div>
+              <div class="bar-row"><span>10:00</span><div class="bar" style="--w: 50%"></div><span>12</span></div>
+              <div class="bar-row"><span>10:20</span><div class="bar" style="--w: 46%"></div><span>11</span></div>
+              <div class="bar-row"><span>10:40</span><div class="bar" style="--w: 50%"></div><span>12</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <p class="section-label">E-ink display node</p>
+          <h2>A low-power screen for people, not just data logs.</h2>
+          <p class="section-intro" style="margin-top: 18px; max-width: 650px;">
+            The display is part of the system rather than a separate exhibition prop. It turns sensor data into an accessible public-facing output, showing current air conditions alongside recent historical readings.
+          </p>
+          <div class="feature-list" style="margin-top: 26px;">
+            <div class="feature-item">
+              <h3>Readable in bright spaces</h3>
+              <p>E-ink provides a paper-like surface that remains easy to read under ambient light.</p>
+            </div>
+            <div class="feature-item">
+              <h3>Low energy demand</h3>
+              <p>The screen only needs power when the image changes, making it appropriate for a solar-powered system.</p>
+            </div>
+            <div class="feature-item">
+              <h3>Current and recent values</h3>
+              <p>The interface shows real-time measurements and a compact history, helping viewers understand environmental change over time.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="prototype" class="page">
+      <div class="section-head">
+        <div>
+          <p class="section-label">Prototype summary</p>
+          <h2>Designed as a self-sustained sensing layer.</h2>
+        </div>
+        <p class="section-intro">
+          The prototype explores whether small, solar-powered LoRaWAN nodes can support scalable neighbourhood-level environmental monitoring.
+        </p>
+      </div>
+
+      <div class="specs">
+        <div class="spec">
+          <strong>Sensing node</strong>
+          <span>Outdoor low-power microcontroller with particulate and environmental sensors.</span>
+        </div>
+        <div class="spec">
+          <strong>Communication path</strong>
+          <span>Sensor node → LoRaWAN gateway → decoded environmental readings → display node.</span>
+        </div>
+        <div class="spec">
+          <strong>Deployment intent</strong>
+          <span>Off-grid monitoring for urban sites where wired power and Wi-Fi are limiting factors.</span>
+        </div>
+      </div>
+
+      <div class="cta" style="margin-top: 34px;">
+        <div>
+          <h2 style="font-size: clamp(28px, 3.5vw, 42px);">A compact system for seeing local air change.</h2>
+          <p>Solar power supports autonomy. LoRaWAN supports distance. The e-ink display makes the data visible and understandable.</p>
+        </div>
+        <a class="button secondary" href="#top">Back to top</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="page">
+    Solar-Powered LoRaWAN Air Quality Sensing System · Tianrui Min · Connected Environments Exhibition 2026
+  </footer>
+</body>
+</html>
