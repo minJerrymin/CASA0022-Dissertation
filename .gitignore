@@ -1,0 +1,20 @@
+# Local firmware credentials
+arduino_secrets.h
+
+# Environment and secret files
+.env
+*.env
+secrets.*
+!arduino_secrets.example.h
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+
+# Local-only comparison inputs and generated clutter
+wunderground_*.json
+Londonair PM DATA.csv
+ttn_uplinks_*.jsonl
+.DS_Store
+Thumbs.db

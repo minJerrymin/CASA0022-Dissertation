@@ -1,0 +1,4 @@
+#pragma once
+
+#define SECRET_TTN_JOIN_EUI "YOUR_JOIN_EUI"
+#define SECRET_TTN_APP_KEY "YOUR_APP_KEY"

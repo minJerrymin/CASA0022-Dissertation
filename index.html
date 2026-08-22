@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Solar-Powered LoRaWAN Air Quality Sensing System</title>
+  <title>Design and Deployment of a Solar-Powered LoRaWAN Air Quality Monitoring System</title>
   <style>
     html {
       scroll-behavior: smooth;
@@ -231,6 +231,21 @@
       right: -80px;
       border-radius: 50%;
       background: rgba(84, 119, 90, 0.12);
+    }
+
+    .project-photo {
+      position: relative;
+      display: block;
+      width: 100%;
+      height: auto;
+      border-radius: 18px;
+      object-fit: cover;
+    }
+
+    .device-card .project-photo {
+      max-height: 520px;
+      object-fit: contain;
+      background: #eef4ec;
     }
 
     .sensor-visual {
@@ -744,7 +759,7 @@
         <a href="#features">Features</a>
         <a href="#system">System</a>
         <a href="#data">Data display</a>
-        <a href="#prototype">Prototype</a>
+        <a href="#prototype">Results</a>
       </nav>
     </div>
   </header>
@@ -752,10 +767,10 @@
   <main id="top">
     <section class="page hero">
       <div>
-        <div class="eyebrow">Off-grid environmental sensing</div>
-        <h1>Local air quality, measured off-grid.</h1>
+        <div class="eyebrow">CASA0022 MSc Connected Environments</div>
+        <h1>Solar-powered LoRaWAN air quality monitoring.</h1>
         <p class="lead">
-          A solar-powered LoRaWAN sensing system that measures particulate matter, temperature, humidity and air pressure, then presents live and recent environmental readings on a dedicated e-ink display.
+          A deployed low-power system that measures particulate matter, temperature, humidity and pressure, sends ten-minute observations through LoRaWAN and presents cloud-hosted readings on a dedicated e-paper display.
         </p>
         <div class="hero-actions">
           <a class="button primary" href="#system">Explore the system</a>
@@ -763,36 +778,22 @@
         </div>
         <div class="hero-meta" aria-label="Core project highlights">
           <div class="mini-stat">
-            <strong>PM2.5 / PM10</strong>
-            <span>Particle sensing for local air quality observation</span>
+            <strong>4,961</strong>
+            <span>Complete ThingSpeak records</span>
           </div>
           <div class="mini-stat">
-            <strong>LoRaWAN</strong>
-            <span>Long-range, low-power data transmission</span>
+            <strong>10 min</strong>
+            <span>Median reporting interval</span>
           </div>
           <div class="mini-stat">
-            <strong>Solar</strong>
-            <span>Designed for off-grid outdoor deployment</span>
+            <strong>38.42 days</strong>
+            <span>Final monitoring span</span>
           </div>
         </div>
       </div>
 
-      <aside class="device-card" aria-label="Prototype visual summary">
-        <div class="sensor-visual">
-          <div>
-            <div class="solar-panel" aria-hidden="true"></div>
-            <div class="antenna" aria-hidden="true"></div>
-            <div class="node-body">
-              <div class="node-screen">
-                <div class="metric-row"><span>PM2.5</span><strong>12 µg/m³</strong></div>
-                <div class="metric-row"><span>PM10</span><strong>21 µg/m³</strong></div>
-                <div class="metric-row"><span>Temp</span><strong>18.6°C</strong></div>
-                <div class="metric-row"><span>RH</span><strong>54%</strong></div>
-                <div class="metric-row"><span>Pressure</span><strong>1012 hPa</strong></div>
-              </div>
-            </div>
-          </div>
-        </div>
+      <aside class="device-card" aria-label="Completed project system">
+        <img class="project-photo" src="images/final_system.png" alt="Completed solar-powered sensing node and indoor e-paper display" />
       </aside>
     </section>
 
@@ -803,7 +804,7 @@
           <h2>Built for low-maintenance urban sensing.</h2>
         </div>
         <p class="section-intro">
-          The project focuses on a practical environmental monitoring node that can collect meaningful local data while reducing dependence on wired power and Wi-Fi infrastructure.
+          The project tests the conditional viability of a practical monitoring node where mains power is unavailable, while retaining clear limits around particulate performance and energy availability.
         </p>
       </div>
 
@@ -859,16 +860,16 @@
             <div class="number">3</div>
             <div>
               <h3>Receive and display</h3>
-              <p>A dedicated display node presents live readings and selected historical values on an e-ink screen.</p>
+              <p>TTN-decoded values are forwarded to ThingSpeak. The ESP32 display then retrieves them from ThingSpeak over Wi-Fi and presents current readings and five-hour trends.</p>
             </div>
           </div>
         </div>
 
         <div class="signal-card">
           <p class="section-label" style="color: rgba(255,255,255,0.72);">Why LoRaWAN?</p>
-          <h2 style="font-size: clamp(30px, 4vw, 48px);">Long range, low power, no Wi-Fi.</h2>
+          <h2 style="font-size: clamp(30px, 4vw, 48px);">Long range and low power at the sensing site.</h2>
           <p>
-            LoRaWAN is suitable for sensing systems that send small amounts of data over long distances. For this project, it helps the outdoor node operate away from mains power and local Wi-Fi networks.
+            The outdoor node sends a compact, unconfirmed 10-byte payload on FPort 2 through LoRaWAN. The complete path is sensing node → The Things Network → ThingSpeak → ESP32 display over Wi-Fi.
           </p>
           <div class="signal-waves" aria-hidden="true">
             <span class="wave"></span>
@@ -881,48 +882,15 @@
 
     <section id="data" class="eink-section">
       <div class="page eink-main">
-        <div class="eink-device" aria-label="E-ink display concept">
-          <div class="eink-screen">
-            <div class="screen-top">
-              <div class="screen-title">Local Air Quality</div>
-              <div class="live-pill">LIVE 10:40</div>
-            </div>
-            <div class="screen-grid">
-              <div class="screen-metric">
-                <small>PM2.5</small>
-                <strong>12</strong>
-                <span>µg/m³</span>
-              </div>
-              <div class="screen-metric">
-                <small>PM10</small>
-                <strong>21</strong>
-                <span>µg/m³</span>
-              </div>
-              <div class="screen-metric">
-                <small>Temp / RH</small>
-                <strong>18.6</strong>
-                <span>°C / 54% RH</span>
-              </div>
-              <div class="screen-metric">
-                <small>Pressure</small>
-                <strong>1012</strong>
-                <span>hPa</span>
-              </div>
-            </div>
-            <div class="history-bars" aria-label="Historical PM2.5 example readings">
-              <div class="bar-row"><span>09:40</span><div class="bar" style="--w: 42%"></div><span>10</span></div>
-              <div class="bar-row"><span>10:00</span><div class="bar" style="--w: 50%"></div><span>12</span></div>
-              <div class="bar-row"><span>10:20</span><div class="bar" style="--w: 46%"></div><span>11</span></div>
-              <div class="bar-row"><span>10:40</span><div class="bar" style="--w: 50%"></div><span>12</span></div>
-            </div>
-          </div>
+        <div class="eink-device" aria-label="E-paper display showing the pressure trend page">
+          <img class="project-photo" src="images/eink_display_pressure_trend.png" alt="Pressure five-hour trend on page 8 of 8 of the e-paper display" />
         </div>
 
         <div>
           <p class="section-label">E-ink display node</p>
-          <h2>A low-power screen for people, not just data logs.</h2>
+          <h2>Eight pages of current readings and five-hour trends.</h2>
           <p class="section-intro" style="margin-top: 18px; max-width: 650px;">
-            The display is part of the system rather than a separate exhibition prop. It turns sensor data into an accessible public-facing output, showing current air conditions alongside recent historical readings.
+            The FireBeetle 2 ESP32-E checks the latest ThingSpeak entry approximately every 60 seconds. A new entry triggers one 30-sample history download; eight pages are then shown for 20 seconds each.
           </p>
           <div class="feature-list" style="margin-top: 26px;">
             <div class="feature-item">
@@ -930,12 +898,12 @@
               <p>E-ink provides a paper-like surface that remains easy to read under ambient light.</p>
             </div>
             <div class="feature-item">
-              <h3>Low energy demand</h3>
-              <p>The screen only needs power when the image changes, making it appropriate for a solar-powered system.</p>
+              <h3>Cloud retrieval</h3>
+              <p>The display uses Wi-Fi to read ThingSpeak and does not communicate directly with The Things Network.</p>
             </div>
             <div class="feature-item">
-              <h3>Current and recent values</h3>
-              <p>The interface shows real-time measurements and a compact history, helping viewers understand environmental change over time.</p>
+              <h3>Controlled refresh cycle</h3>
+              <p>After three complete 160-second carousel cycles, the implemented behaviour retains a full-refresh summary page.</p>
             </div>
           </div>
         </div>
@@ -945,33 +913,35 @@
     <section id="prototype" class="page">
       <div class="section-head">
         <div>
-          <p class="section-label">Prototype summary</p>
-          <h2>Designed as a self-sustained sensing layer.</h2>
+          <p class="section-label">Deployment and evaluation</p>
+          <h2>A qualified positive result, with visible limits.</h2>
         </div>
         <p class="section-intro">
-          The prototype explores whether small, solar-powered LoRaWAN nodes can support scalable neighbourhood-level environmental monitoring.
+          Deployed at the UCL One Pool Street Roof Garden, the prototype supports the feasibility of low-power distributed sensing under adequate LoRaWAN coverage and available solar energy.
         </p>
       </div>
 
       <div class="specs">
         <div class="spec">
-          <strong>Sensing node</strong>
-          <span>Outdoor low-power microcontroller with particulate and environmental sensors.</span>
+          <strong>Operational continuity</strong>
+          <span>4,961 records; 98.79% of intervals within 9.5–10.5 minutes; approximately 34.66 stable days.</span>
         </div>
         <div class="spec">
-          <strong>Communication path</strong>
-          <span>Sensor node → LoRaWAN gateway → decoded environmental readings → display node.</span>
+          <strong>Environmental comparison</strong>
+          <span>Strong temporal agreement for temperature, humidity and pressure; moderate PM2.5 agreement.</span>
         </div>
         <div class="spec">
-          <strong>Deployment intent</strong>
-          <span>Off-grid monitoring for urban sites where wired power and Wi-Fi are limiting factors.</span>
+          <strong>Particulate limitation</strong>
+          <span>PM10 agreement was weak, and PM2.5 equalled PM10 in 98.83% of project records.</span>
         </div>
       </div>
 
+      <img class="project-photo" style="margin-top: 34px; max-height: 560px; object-fit: cover;" src="images/ops_roof_deployment.jpg" alt="Solar-powered sensing node deployed at the UCL One Pool Street Roof Garden" />
+
       <div class="cta" style="margin-top: 34px;">
         <div>
-          <h2 style="font-size: clamp(28px, 3.5vw, 42px);">A compact system for seeing local air change.</h2>
-          <p>Solar power supports autonomy. LoRaWAN supports distance. The e-ink display makes the data visible and understandable.</p>
+          <h2 style="font-size: clamp(28px, 3.5vw, 42px);">Conditional viability, not reference-grade sensing.</h2>
+          <p>The system demonstrates a complete sensing-to-display pathway while documenting PM10, coverage and solar-energy limitations.</p>
         </div>
         <a class="button secondary" href="#top">Back to top</a>
       </div>
@@ -979,7 +949,7 @@
   </main>
 
   <footer class="page">
-    Solar-Powered LoRaWAN Air Quality Sensing System · Tianrui Min · Connected Environments Exhibition 2026
+    Design and Deployment of a Solar-Powered LoRaWAN Air Quality Monitoring System · Tianrui Min · Connected Environments 2026
   </footer>
 </body>
 </html>
