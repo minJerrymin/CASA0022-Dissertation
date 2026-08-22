@@ -10,13 +10,13 @@ The prototype demonstrates conditional viability rather than reference-grade per
 
 ## System architecture
 
-![System wiring and data architecture](hardware/system_wiring_architecture.png)
+![Final system architecture and data pathway](hardware/system_architecture.png)
 
 The deployed data pathway is:
 
-**Outdoor sensing node → LoRaWAN → The Things Network → ThingSpeak → Wi-Fi → ESP32 e-paper display**
+**Sensing node → LoRaWAN gateway → The Things Network (TTN) → ThingSpeak → Wi-Fi → local ESP32 + e-paper display**
 
-The outdoor node sends unconfirmed LoRaWAN uplinks to The Things Network. Decoded measurements are forwarded to ThingSpeak. The indoor display separately retrieves the ThingSpeak channel over Wi-Fi; it does not receive data directly from TTN.
+The solar-powered outdoor node sends unconfirmed LoRaWAN uplinks through a gateway to The Things Network. Decoded measurements are forwarded to ThingSpeak. The indoor display separately retrieves the ThingSpeak channel over Wi-Fi; it does not receive data directly from TTN.
 
 ## Hardware
 
